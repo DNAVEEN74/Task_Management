@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { addTaskState, newTaskAtom } from '../../Atoms/addTaskAtom';
-import { Calendar1Icon } from 'lucide-react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { addTaskState, backendUrlAtom, newTaskAtom } from '../../Atoms/addTaskAtom';
+import { Calendar1Icon, ChevronDownIcon } from 'lucide-react';
 import CustomCalendar from '../calender/calendar';
+import axios from 'axios';
 
 const AddTask: React.FC = () => {
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const setAddTask = useSetRecoilState(addTaskState);
   const setNewTask = useSetRecoilState(newTaskAtom);
+  const newTask = useRecoilValue(newTaskAtom);
   const [date, setDate] = useState<string>('');
+  const url = useRecoilValue(backendUrlAtom);
+
+  const handleAddTask = async () => {
+    try {
+      const response = await axios.post(`${url}/post`, newTask);
+      console.log("Task added successfully:", response.data);
+      setAddTask(false);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
+  };
 
   const handleChange = (key: string, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -26,6 +39,13 @@ const AddTask: React.FC = () => {
     }));
   };
 
+  const handleSetPriority = (priority: string) => {
+    setNewTask((prevState) => ({
+      ...prevState,
+      priority,
+    }));
+  };
+
   return (
     <div className="bg-white p-5 rounded-lg shadow-md w-[333px] h-[504px] mx-auto ">
       <div className="relative flex justify-center items-center ">
@@ -34,6 +54,8 @@ const AddTask: React.FC = () => {
           setAddTask={setAddTask}
           handleChange={handleChange}
           handleDeadLineChange={handleDeadLineChange}
+          handleAddTask={handleAddTask}
+          handleSetPriority={handleSetPriority}
           setDate={setDate}
           date={date}
         />
@@ -52,6 +74,8 @@ type AddTaskCardProps = {
   setAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   handleChange: (key: string, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleDeadLineChange: (selectedDate: string) => void;
+  handleAddTask: () => void;
+  handleSetPriority: (priority: string) => void;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   date: string;
 };
@@ -62,10 +86,14 @@ const AddTaskCard: React.FC<AddTaskCardProps> = ({
   setDate,
   handleChange,
   handleDeadLineChange,
+  handleAddTask,
+  handleSetPriority,
   date,
 }) => {
+  const [showPriorityDropdown, setShowPriorityDropdown] = useState<boolean>(false);
+
   const handleDeadLineSet = () => {
-    setCalendar((prevState) => !prevState); 
+    setCalendar((prevState) => !prevState);
   };
 
   const handleCancelAddTodo = () => {
@@ -74,9 +102,30 @@ const AddTaskCard: React.FC<AddTaskCardProps> = ({
 
   return (
     <div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center content-center">
         <h2 className="text-lg font-bold">ADD TASK</h2>
-        <button className="text-xl font-bold">+</button>
+        <div className="relative">
+          <button onClick={handleAddTask} className="text-xl font-bold">+</button>
+          <button onClick={() => setShowPriorityDropdown(!showPriorityDropdown)} className="ml-2">
+            <ChevronDownIcon className="w-5 h-5" />
+          </button>
+          {showPriorityDropdown && (
+            <div className="absolute right-0 mt-2 w-24 bg-white border rounded-md shadow-md">
+              {['Low', 'Medium', 'High'].map((priority) => (
+                <button
+                  key={priority}
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
+                  onClick={() => {
+                    handleSetPriority(priority.toLowerCase());
+                    setShowPriorityDropdown(false);
+                  }}
+                >
+                  {priority}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <hr className="my-2" />
       <div>

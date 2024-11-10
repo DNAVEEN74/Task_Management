@@ -4,6 +4,8 @@ type NewTask = {
     title: string;
     description: string;
     deadline: string;
+    priority: string;
+    state: string;
 };
 
 export const addTaskState = atom<boolean>({
@@ -17,5 +19,12 @@ export const newTaskAtom = atom<NewTask>({
         title: '',
         description: '',
         deadline: '',
+        priority:'',
+        state:'todos',
     },
 });
+
+export const backendUrlAtom = atom({
+    key:'backendUrlAtom',
+    default:'http://localhost:3000'
+})
