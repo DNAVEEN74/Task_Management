@@ -8,7 +8,7 @@ import deleteRouter from './routes/delete';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173', 'https://task-management-q8x7.vercel.app/'];
+const allowedOrigins = ['http://localhost:5173', 'https://task-management-q8x7.vercel.app'];
 
 const corsOptions = {
     origin: (origin:any , callback: any) => {
