@@ -60,7 +60,7 @@ A simple, intuitive Task Management application built with React, TypeScript, an
 1. Clone the repository:
    ```bash
    git clone https://github.com/DNAVEEN74/Task_Management
-   cd ./backend 
+   cd Task_Management/backend 
    ```
   2. install dependencies:
   ```bash
@@ -80,12 +80,12 @@ A simple, intuitive Task Management application built with React, TypeScript, an
 ### Frontend Setup
 1. Navigate to the frontend directory:
     ```bash
-    `cd ./frontend` 
+    cd ../frontend
     ```
 2.  Install dependencies:
-```bash
-npm install 
-```
+   ```bash
+   npm install 
+   ```
 3. Start the frontend server:
     ```bash
     npm run dev
