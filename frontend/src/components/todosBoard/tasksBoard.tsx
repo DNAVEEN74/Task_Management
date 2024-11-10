@@ -25,7 +25,6 @@ type Todo = {
   state: string;
 };
 
-
 type Tab = {
   id: string;
   list: Todo[];
