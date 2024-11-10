@@ -26,5 +26,5 @@ export const newTaskAtom = atom<NewTask>({
 
 export const backendUrlAtom = atom({
     key:'backendUrlAtom',
-    default:'http://localhost:3000'
+    default:'https://task-management-slwh.onrender.com'
 })
